@@ -21,11 +21,50 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
 
     const db = client.db(databaseName)
 
-    db.collection('users').insertOne({
-        name: 'Low',
-        age: 28
-    })
+    // Single Insertion
+    // db.collection('users').insertOne({
+    //     name: 'E',
+    //     age: 28
+    // }, (error, result) => { // Here I added to callback function to the function above
 
-    console.log('Data inserted')
+    //     // if the above operation fails, notify the user
+    //     if(error) {
+    //         console.log('Insert Operation Failed!')
+    //     }
+    //     // else if the operation succeeds, present the user with the results of the operation
+    //     console.log(result.ops)
+    // }) 
+    
+    // Bulk Insertion
+    // db.collection('users').insertMany([
+    //     {
+    //     name: 'Low Jr',
+    //     age: 6
+    // }, {
+    //     name: 'Mom'
+    // }], (error, result) => {
+    //     if(error) {
+    //         console.log('Bulk insert opertaion failed!')
+    //     }
+    //     console.log(result.ops)
+    // })
+
+
+    db.collection('tasks').insertMany([
+            {
+            taskDescr: 'Go to Sams club',
+            isCompleted: false
+        }, {
+            taskDescr: 'Finish Mongodb section on Udemy',
+            isCompleted: false
+        }, {
+            taskDescr: 'Eat a pack of apple slices',
+            isCompleted: true
+        }], (error, result) => {
+            if(error) {
+                console.log('Bulk insert opertaion failed!')
+            }
+            console.log(result.ops)
+        })
 
 })
