@@ -73,12 +73,58 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
     //         console.log(result.ops)
     //     })
 
-    db.collection('tasks').findOne({ _id: new ObjectID('5ccda26348b0cc7785584a65') }, (error, docs) => {
-        console.log(docs)
-    })
+    // Find Single Occurence
 
-    db.collection('tasks').find({ isCompleted: false }).toArray((error, docs) => {
-        console.log(docs)
-     })
+    // db.collection('tasks').findOne({ _id: new ObjectID('5ccda26348b0cc7785584a65') }, (error, docs) => {
+    //     console.log(docs)
+    // })
+
+    // db.collection('users').findOne({ name: 'Low'}, (error, docs) => {
+    //     console.log(docs)
+    // })
+
+    // Find Multiple Occurences
+
+    // db.collection('tasks').find({ isCompleted: false }).toArray((error, docs) => {
+    //     console.log(docs)
+    //  })
+
+
+    // Single Update
+
+    //const updatePromise
+    // updatePromise = db.collection('users').updateOne({
+    //     _id: new ObjectID('5ccd9680763103751d62c408')
+    // }, {
+    //     $set: {
+    //         name: "Lowell"
+
+    //     } // chaining the then and catch methods of the promise instead of creating another function block (below)
+    // }).then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // updatePromise.then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // Bulk Update
+
+    isCompletePromise = db.collection('tasks').updateMany({
+        isCompleted: false // find every task in the document that is marked as incomplete (false)
+    }, {
+        $set: {
+            isCompleted: true // mark it as completed (true)
+
+        } // promise handler methods (error handling)
+    }).then((result) => {
+        console.log(result.modifiedCount)
+    }).catch((error) => {
+        console.log(error)
+    })
     
 })
