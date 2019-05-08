@@ -1,7 +1,13 @@
 // CRUD - Create Update and Delete
 
-const mongodb = require("mongodb")
-const MongoClient = mongodb.MongoClient
+// const mongodb = require("mongodb")
+// const MongoClient = mongodb.MongoClient
+
+const { MongoClient, ObjectID } = require('mongodb') // destructure mongodb module import; list the objets I want to use
+
+id = new ObjectID
+console.log(id)
+console.log(id.getTimestamp())
 
 const connectionURL = 'mongodb://127.0.0.1:27017' // the server uri where the db is being served up
 const databaseName = 'task-manager' // name of the document I want to create
@@ -50,21 +56,29 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
     // })
 
 
-    db.collection('tasks').insertMany([
-            {
-            taskDescr: 'Go to Sams club',
-            isCompleted: false
-        }, {
-            taskDescr: 'Finish Mongodb section on Udemy',
-            isCompleted: false
-        }, {
-            taskDescr: 'Eat a pack of apple slices',
-            isCompleted: true
-        }], (error, result) => {
-            if(error) {
-                console.log('Bulk insert opertaion failed!')
-            }
-            console.log(result.ops)
-        })
+    // db.collection('tasks').insertMany([
+    //         {
+    //         taskDescr: 'Go to Sams club',
+    //         isCompleted: false
+    //     }, {
+    //         taskDescr: 'Finish Mongodb section on Udemy',
+    //         isCompleted: false
+    //     }, {
+    //         taskDescr: 'Eat a pack of apple slices',
+    //         isCompleted: true
+    //     }], (error, result) => {
+    //         if(error) {
+    //             console.log('Bulk insert opertaion failed!')
+    //         }
+    //         console.log(result.ops)
+    //     })
 
+    db.collection('tasks').findOne({ _id: new ObjectID('5ccda26348b0cc7785584a65') }, (error, docs) => {
+        console.log(docs)
+    })
+
+    db.collection('tasks').find({ isCompleted: false }).toArray((error, docs) => {
+        console.log(docs)
+     })
+    
 })
