@@ -27,9 +27,10 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
 
     const db = client.db(databaseName)
 
-    // Single Insertion
+    //Single Insertion
+
     // db.collection('users').insertOne({
-    //     name: 'E',
+    //     name: 'Low',
     //     age: 28
     // }, (error, result) => { // Here I added to callback function to the function above
 
@@ -114,17 +115,38 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
 
     // Bulk Update
 
-    isCompletePromise = db.collection('tasks').updateMany({
-        isCompleted: false // find every task in the document that is marked as incomplete (false)
-    }, {
-        $set: {
-            isCompleted: true // mark it as completed (true)
+    // isCompletePromise = db.collection('tasks').updateMany({
+    //     isCompleted: false // find every task in the document that is marked as incomplete (false)
+    // }, {
+    //     $set: {
+    //         isCompleted: true // mark it as completed (true)
 
-        } // promise handler methods (error handling)
+    //     } // promise handler methods (error handling)
+    // }).then((result) => {
+    //     console.log(result.modifiedCount)
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+    // Singe Deletion
+
+    // db.collection('users').deleteOne({ 
+    //    name: 'Lowell' 
+    // }).then((result) => {
+    //     console.log(result.deletedCount, 'records deleted!')
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
+
+
+    // Bulk Deletion
+
+    db.collection('users').deleteMany({
+         age: 28 
     }).then((result) => {
-        console.log(result.modifiedCount)
+        console.log(result.deletedCount, 'records deleted!')
     }).catch((error) => {
         console.log(error)
     })
-    
+ 
 })
