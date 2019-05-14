@@ -30,8 +30,8 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
     //Single Insertion
 
     // db.collection('users').insertOne({
-    //     name: 'Low',
-    //     age: 28
+    //     name: 'Leron',
+    //     age: 31
     // }, (error, result) => { // Here I added to callback function to the function above
 
     //     // if the above operation fails, notify the user
@@ -141,12 +141,12 @@ MongoClient.connect(connectionURL,{ useNewUrlParser: true }, (error, client) => 
 
     // Bulk Deletion
 
-    db.collection('users').deleteMany({
-         age: 28 
-    }).then((result) => {
-        console.log(result.deletedCount, 'records deleted!')
-    }).catch((error) => {
-        console.log(error)
-    })
+    // db.collection('users').deleteMany({
+    //      age: 28 
+    // }).then((result) => {
+    //     console.log(result.deletedCount, 'records deleted!')
+    // }).catch((error) => {
+    //     console.log(error)
+    // })
  
 })
