@@ -122,6 +122,25 @@ app.get('/users/:id', async (req,res) => {
     }
 })
 
+// 3. Update User By ID - Async/Await Style
+
+app.patch('/users/:id', async (req,res) => {
+
+    const _id = req.params.id // access and save the value passed in
+    
+    try {
+        const user = await User.findByIdAndUpdate(_id, req.body, { new: true, runValidators: true }) 
+        
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
 // 4. Create Task - Promise Chaining Style
 
 // app.post('/tasks', (req,res) => {
