@@ -3,6 +3,8 @@ const User = require('../models/user') // Bring over the model for this resource
 
 const router = new express.Router() // Create the new Router instance
 
+
+
 // 1. Create User - Async/Await Style
 
 router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
@@ -23,6 +25,93 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
         res.status(400).send(e)
     }
 })
+
+// 2. Get All Users - Async/Await Style
+
+router.get('/users', async (req,res) => {
+
+        try {
+           const user = await User.find({})
+           res.send(user)
+
+        } catch (e) {
+            res.status(500).send()
+        }
+})
+
+// 3. Get User By ID - Async/Await Style
+
+router.get('/users/:id', async (req,res) => {
+
+    const _id = req.params.id // access and save the value passed in
+    
+    try {
+        const user = await User.findById(_id)
+        
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+// 4. Update User By ID - Async/Await Style
+
+router.patch('/users/:id', async (req,res) => {
+
+    const _id = req.params.id // access and save the value passed in
+    const updates = Object.keys(req.body) // stores all of the keys passed in req.body in a new array object
+    const allowedUpdates = ["name", "email", "age", "password"] // array that defines what keys we will allowed to be updated
+    
+    // every() takes a callback as it's only argument
+    // for every item in the updates array check to see if that value is included in the allowedUpdates array
+    // returns a boolean (true or false)
+    const isValid = updates.every((update) => allowedUpdates.includes(update)) 
+
+    if (!isValid) {
+        return res.status(400).send({ error: 'Invalid updates!' })
+    }
+    
+    try {
+
+        const user = await User.findById(_id)
+        updates.forEach((update) => user[update] = req.body[update])
+        // const user = await User.findOneAndUpdate(_id, req.body, { new: true, runValidators: true }) 
+        
+        await user.save()
+
+        if (!user) {
+            return res.status(404).send()
+        }
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+// 5. Delete User By ID - Async/Await Style
+
+router.delete('/users/:id', async (req,res) => {
+
+    const _id = req.params.id
+
+    try {
+        const user = await User.findOneAndDelete(_id)
+
+        if(!user) {
+            res.status(404).send()
+        }
+
+        res.send(user)
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
 
 // 1. Create User - Promise Chain Style
 
@@ -45,19 +134,6 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
 // })
 
 
-// 2. Get All Users - Async/Await Style
-
-router.get('/users', async (req,res) => {
-
-        try {
-           const user = await User.find({})
-           res.send(user)
-
-        } catch (e) {
-            res.status(500).send()
-        }
-})
-
 // 2. Get All Users - Promise Chain Style
 
 // router.get('/users', (req,res) => {
@@ -71,24 +147,6 @@ router.get('/users', async (req,res) => {
 // })
 
 
-// 3. Get User By ID - Async/Await Style
-
-router.get('/users/:id', async (req,res) => {
-
-    const _id = req.params.id // access and save the value passed in
-    
-    try {
-        const user = await User.findById(_id)
-        
-        if (!user) {
-            return res.status(404).send()
-        }
-
-        res.send(user)
-    } catch (e) {
-        res.status(500).send()
-    }
-})
 
 
 // 3. Get User By ID - Promise Chain Style
@@ -117,55 +175,5 @@ router.get('/users/:id', async (req,res) => {
 //     })
 // })
 
-
-
-// 3. Update User By ID - Async/Await Style
-
-router.patch('/users/:id', async (req,res) => {
-
-    const _id = req.params.id // access and save the value passed in
-    const updates = Object.keys(req.body) // stores all of the keys passed in req.body in a new array object
-    const allowedUpdates = ["name", "email", "age", "password"] // array that defines what keys we will allowed to be updated
-    
-    // every() takes a callback as it's only argument
-    // for every item in the updates array check to see if that value is included in the allowedUpdates array
-    // returns a boolean (true or false)
-    const isValid = updates.every((update) => allowedUpdates.includes(update)) 
-
-    if (!isValid) {
-        return res.status(400).send({ error: 'Invalid updates!' })
-    }
-    
-    try {
-        const user = await User.findOneAndUpdate(_id, req.body, { new: true, runValidators: true }) 
-        
-        if (!user) {
-            return res.status(404).send()
-        }
-
-        res.send(user)
-    } catch (e) {
-        res.status(500).send(e)
-    }
-})
-
-// 4. Delete User By ID - Async/Await Style
-
-router.delete('/users/:id', async (req,res) => {
-
-    const _id = req.params.id
-
-    try {
-        const user = await User.findOneAndDelete(_id)
-
-        if(!user) {
-            res.status(404).send()
-        }
-
-        res.send(user)
-    } catch (e) {
-        res.status(500).send()
-    }
-})
 
 module.exports = router
