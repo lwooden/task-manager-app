@@ -3,7 +3,56 @@ const Task = require('../models/task') // Bring over the model for this resource
 
 const router = new express.Router() // Create the new Router instance
 
-// 3. Update Task By ID - Async/Await Style
+
+// 1. Create Task - Async/Await Style
+
+router.post('/tasks', async (req,res) => {
+    
+    const task = new Task(req.body) 
+
+    try {
+        const result = await task.save()
+        res.status(200).send(result)
+    } catch (e) {
+        res.status(500).send()
+    }
+ 
+})
+
+// 2. Get All Tasks - Async/Await Style
+
+router.get('/tasks', async (req,res) => {
+
+    try {
+        const tasks = await Task.find({})
+        res.status(200).send(tasks)
+
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+// 3. Get Task By ID - Async/Await Style
+
+router.get('/tasks/:id', async (req,res) => {
+
+    const _id = req.params.id
+
+    try {
+        const task = await Task.findById(_id)
+
+        if (!task) {
+            res.status(404).send()
+        }
+        res.send(task)
+
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+
+// 4. Update Task By ID - Async/Await Style
 
 router.patch('/tasks/:id', async (req,res) => {
     
@@ -33,6 +82,8 @@ router.patch('/tasks/:id', async (req,res) => {
     }
 })
 
+// 5. Delete Task By ID - Async/Await Style
+
 router.delete('/tasks/:id', async (req,res) => {
 
     const _id = req.params.id
@@ -49,7 +100,7 @@ router.delete('/tasks/:id', async (req,res) => {
     }
 })
 
-// 4. Create Task - Promise Chaining Style
+// 1. Create Task - Promise Chaining Style
 
 // router.post('/tasks', (req,res) => {
     
@@ -62,22 +113,8 @@ router.delete('/tasks/:id', async (req,res) => {
 //     })
 // })
 
-// 4. Create Task - Async/Await Style
 
-router.post('/tasks', async (req,res) => {
-    
-    const task = new Task(req.body) 
-
-    try {
-        const result = await task.save()
-        res.status(200).send(result)
-    } catch (e) {
-        res.status(500).send()
-    }
- 
-})
-
-// 5. Get All Tasks - Promise Chaining Style
+// 2. Get All Tasks - Promise Chaining Style
 
 // router.get('/tasks', (req,res) => {
     
@@ -89,20 +126,8 @@ router.post('/tasks', async (req,res) => {
 // })
 
 
-// 5. Get All Tasks - Async/Await Style
 
-router.get('/tasks', async (req,res) => {
-
-    try {
-        const tasks = await Task.find({})
-        res.status(200).send(tasks)
-
-    } catch (e) {
-        res.status(500).send()
-    }
-})
-
-// 6. Get Task By ID - Promise Chaining Style
+// 3. Get Task By ID - Promise Chaining Style
 
 // router.get('/tasks/:id', (req,res) => {
 
@@ -118,24 +143,7 @@ router.get('/tasks', async (req,res) => {
 //     })
 // })
 
-// 6. Get Task By ID - Async/Await Style
 
-router.get('/tasks/:id', async (req,res) => {
-
-    const _id = req.params.id
-
-    try {
-        const task = await Task.findById(_id)
-
-        if (!task) {
-            res.status(404).send()
-        }
-        res.send(task)
-
-    } catch (e) {
-        res.status(500).send()
-    }
-})
 
 
 module.exports = router
