@@ -1,5 +1,6 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const userRouter = require('./routes/userRoutes') // import userRoutes file
 const taskRouter = require('./routes/taskRoutes') // import taskRoutes file
 require('./db/mongoose') // ensures that the file (mongodb.js) runs and connects to the database
@@ -11,9 +12,12 @@ app.use(express.json()) // ensures express parses all json that is passed to the
 app.use(userRouter) // enable user routes
 app.use(taskRouter) // enable task routes
 
-const myPassword = "Password1"
-const anotherPassword = "Password2"
-const saltRounds = 10
+var token = jwt.sign("I love the Lord", "1234" )
+console.log("Your token:", token)
+
+// const myPassword = "Password1"
+// const anotherPassword = "Password2"
+// const saltRounds = 10
 
 // const myFunction = async () => {
 //     const hashedPassword = await bcrypt.hash(myPassword, 8)
@@ -30,6 +34,8 @@ const saltRounds = 10
 // }
 
 // myFunction()
+
+
 
 
 app.listen(port, () => {
