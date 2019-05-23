@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
         },
         email: {
             type: String,
+            unique: true, // tells MongoDB to create an index for email to ensure it is unique
             required: true,
             lowercase: true,
             trim: true,
@@ -48,6 +49,31 @@ const userSchema = mongoose.Schema({
             }
         }
     })
+
+// define a method for the UserSchema to use 
+userSchema.statics.findByCredentials = async (email, password) => {
+
+    // perform async operation to find the user account using email address
+    // and store the user object 
+    const user = await User.findOne({ email })
+    
+    // if the user isn't in the database, inform the user
+    if (!user) { 
+        throw new Error("Unable to login")
+    }
+
+    // if successful compare the plaintext password passed in
+    // the request body to the value we have in the database
+    const isMatch = await bcrypt.compare(password, user.password)
+
+    // if the cleartext password does not match the hash value
+    // inform the user
+    if (!isMatch) {
+        throw new Error("Unable to login")
+    }
+
+    return user
+}
 
 // define the actions that will take place before(pre) saving to the database
 userSchema.pre('save', async function(next) {
