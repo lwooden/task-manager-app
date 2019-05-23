@@ -112,6 +112,21 @@ router.delete('/users/:id', async (req,res) => {
     }
 })
 
+// 6. User Login - Async/Await Style
+
+router.post('/users/login', async (req, res) => {
+    try {
+        // calls function defined in User Model file 
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        
+        // if successful, returns the user back to the client
+        res.send(user)
+    } catch (e) {
+        res.status(400).send()
+    }
+
+})
+
 
 // 1. Create User - Promise Chain Style
 
