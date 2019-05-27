@@ -1,5 +1,6 @@
 const express = require('express') // Require Express Package
 const User = require('../models/user') // Bring over the model for this resource
+const auth = require('../middleware/auth')
 
 
 const router = new express.Router() // Create the new Router instance
@@ -30,7 +31,7 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
 
 // 2. Get All Users - Async/Await Style
 
-router.get('/users', async (req,res) => {
+router.get('/users', auth, async (req,res) => { // added "auth" as the 2nd argument so our middleware will run "before" the route suite is called
 
         try {
            const user = await User.find({})
@@ -40,6 +41,13 @@ router.get('/users', async (req,res) => {
             res.status(500).send()
         }
 })
+
+// Get Authenticated Users Profile (Not All Users)
+
+router.get('/users/me', auth, async (req,res) => {
+    res.send(req.user)
+})
+
 
 // 3. Get User By ID - Async/Await Style
 
