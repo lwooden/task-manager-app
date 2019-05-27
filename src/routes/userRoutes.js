@@ -1,6 +1,7 @@
 const express = require('express') // Require Express Package
 const User = require('../models/user') // Bring over the model for this resource
 
+
 const router = new express.Router() // Create the new Router instance
 
 
@@ -12,8 +13,9 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
     const user = new User(req.body) 
 
     try { // Step  3: Wrap async task in a try/catch for a more natural syntactical feel
+
         const result = await user.save() // Step 2: Create a variable for the async task we want to perform
-        
+        const token = await user.generateAuthToken()
         // if there is a result then that means we were successful
         // send the result back to the user
         if(result) {
@@ -118,9 +120,10 @@ router.post('/users/login', async (req, res) => {
     try {
         // calls function defined in User Model file 
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        
+        const token = await user.generateAuthToken()
+
         // if successful, returns the user back to the client
-        res.send(user)
+        res.send({ user, token  })
     } catch (e) {
         res.status(400).send()
     }
