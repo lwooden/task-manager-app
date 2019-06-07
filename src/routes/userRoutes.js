@@ -42,10 +42,38 @@ router.get('/users', auth, async (req,res) => { // added "auth" as the 2nd argum
         }
 })
 
-// Get Authenticated Users Profile (Not All Users)
+// Get Authenticated Users Profile Only (Not All Users)
 
 router.get('/users/me', auth, async (req,res) => {
     res.send(req.user)
+})
+
+
+// Log Out
+
+router.post('/users/logout', auth, async (req, res) => {
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token != req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
+})
+
+// Log Out All
+
+router.post('/users/logoutall', auth, async (req, res) => {
+    
+    try {
+        req.user.tokens = []
+        await req.user.save()
+        res.send()
+    } catch (e) {
+        res.status(500).send()
+    }
 })
 
 
