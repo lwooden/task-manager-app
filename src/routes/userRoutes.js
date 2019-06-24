@@ -68,9 +68,9 @@ router.post('/users/logout', auth, async (req, res) => {
 router.post('/users/logoutall', auth, async (req, res) => {
     
     try {
-        req.user.tokens = []
-        await req.user.save()
-        res.send()
+        req.user.tokens = [] // set tokens array to be empty so all tokens will be removed
+        await req.user.save() // save the user profile with the now deleted tokens
+        res.send() // send back a 200 status code
     } catch (e) {
         res.status(500).send()
     }
@@ -133,18 +133,12 @@ router.patch('/users/:id', async (req,res) => {
 
 // 5. Delete User By ID - Async/Await Style
 
-router.delete('/users/:id', async (req,res) => {
-
-    const _id = req.params.id
+router.delete('/users/me', auth, async (req,res) => {
 
     try {
-        const user = await User.findOneAndDelete(_id)
+        await req.user.remove()
 
-        if(!user) {
-            res.status(404).send()
-        }
-
-        res.send(user)
+        res.send(req.user)
     } catch (e) {
         res.status(500).send()
     }
