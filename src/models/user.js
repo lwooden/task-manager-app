@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validator = require('validator')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
+const Task = require('./task')
 
 // insert the model and it's properties into a schema so we can take advantage of middleware
 const userSchema = mongoose.Schema({
@@ -57,6 +58,13 @@ const userSchema = mongoose.Schema({
         }]
     })
 
+userSchema.virtual('tasks', {
+    ref: "Task",
+    localField: '_id',
+    foreignField: 'owner'
+
+})
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, "1234")
@@ -102,6 +110,14 @@ userSchema.pre('save', async function(next) {
     }
 
     next() // tells the program to move to the next opertation which is to save to the database
+
+})
+
+// define the actions that will take place before(pre) removing a user
+userSchema.pre('remove', async function(next) {
+    const user = this
+    await Task.deleteMany({ owner: user._id }) // delete every task where the owner equals the users ID
+    next() // move on to execute the route handler suite
 
 })
 
