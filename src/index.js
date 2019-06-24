@@ -8,6 +8,25 @@ require('./db/mongoose') // ensures that the file (mongodb.js) runs and connects
 const app = express()
 const port = process.env.PORT || 3000
 
+const Task = require('./models/task')
+const User = require('./models/user')
+
+
+// const main = async () => {
+
+//     // Find User by Task
+//     const task = await Task.findById('5d0fd66e5615e72917d71bc3')
+//     await task.populate('owner').execPopulate() // uses the ref statement to retrieve the User who created the task
+//     console.log(task.owner)
+    
+//     // Find Task by User
+//     const user = await User.findById('5d0fd3e1a209d827e9b2a3b3')
+//     await user.populate('tasks').execPopulate()
+//     console.log(user.tasks)
+// }
+
+// main()
+
 // Without Middleware:  new request -> execute route handler
 //
 // With Middleware:     new request -> do something -> execute route handler
