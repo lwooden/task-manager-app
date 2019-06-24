@@ -56,6 +56,8 @@ const userSchema = mongoose.Schema({
                 required: true
             }
         }]
+    }, {
+        timestamps: true // this 2nd argument is set to false by default
     })
 
 userSchema.virtual('tasks', {
