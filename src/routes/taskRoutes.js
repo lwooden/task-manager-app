@@ -28,11 +28,39 @@ router.post('/tasks', auth, async (req,res) => {
 
 // 2. Get All Tasks - Async/Await Style
 
+// GET /tasks?isCompleted=false
+// GET /tasks?limit=2&skip=10
+// GET /tasks?sortBy=createdAt_desc
 router.get('/tasks', auth, async (req,res) => {
+
+    match = {} // empty match object because the client may or may not provide match criteria
+    sort = {} // empty match object because the client may or may not provide sort criteria
+
+    if (req.query.isCompleted) { // pull value from the query string in the request if one is provided
+        match.isCompleted = req.query.isCompleted === 'true' // configure match object 
+    }
+
+    if (req.query.sortBy) { // pull value from the query string in the request if one is provided
+        const parts = req.query.sortBy.split('_')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1 // ternary operator: if the condition is true then the value is set to after the ?. If the condition is false then the value is set to after the :
+    }
 
     try {
         // const tasks = await Task.find({ owner: req.user._id })
-        await req.user.populate('tasks').execPopulate()
+        await req.user.populate({ 
+            // refactor populate function by passing in a object for filtering results based on a match criteria
+            path: 'tasks',
+            match: match, // use match object
+            options: {
+                limit: parseInt(req.query.limit),
+                skip: parseInt(req.query.skip),
+                sort: sort
+                // sort: {
+                //     createdAt: 1, // -1 = desc | 1 = ascend
+                //     isCompleted: -1
+                // }
+            }
+        }).execPopulate()
         res.send(req.user.tasks)
 
     } catch (e) {
