@@ -2,6 +2,7 @@ const express = require('express') // Require Express Package
 const User = require('../models/user') // Bring over the model for this resource
 const auth = require('../middleware/auth')
 const multer = require('multer')
+const sharp = require('sharp')
 
 const router = new express.Router() // Create the new Router instance
 
@@ -32,10 +33,13 @@ const avatar = multer({ // options object to provide filtering and validation to
 })
 
 
-// Upload Avatar - Async/Await Style
+// Create/Update Avatar - Async/Await Style
 
 router.post('/users/me/avatar', auth, avatar.single('avatar'), async (req, res) => {
-    req.user.avatar = req.file.buffer
+    
+    const buffer = await sharp(req.file.buffer).resize({ width:250, height:250 }).png().toBuffer() // pass the buffer that was stored on req.file.buffer to sharp and chain the appropriate methods to match your requirements
+    req.user.avatar = buffer
+    // req.user.avatar = req.file.buffer
     await req.user.save()
     res.send('User profile updated')
 }, (error, req, res, next) => { // this second function attached to the route handler is defined to handle any uncaught errors
@@ -53,7 +57,24 @@ router.delete('/users/me/avatar', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
 
+// Read/Get Avatar - Async/Await Style
+
+router.get('/users/:id/avatar', async (req, res) => {
+
+    try {
+        const user = await User.findById(req.params.id) // pass in the user id in the URL and use it to grab user details from the database
+
+        if (!user || !user.avatar) { // if there is no user with that ID or the user does not have an avatar loaded throw an error
+            throw new Error()
+        }
+        // if we do find a user
+        res.set('Content-Type','image/png') // set the response header to image/jpg since we are sending back the avatar; default is application/json
+        res.send(user.avatar) // send the avatar back
+    } catch (e) {
+        res.status(404).send
+    }
 
 })
 
