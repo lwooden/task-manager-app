@@ -76,8 +76,8 @@ userSchema.methods.toJSON = function () {
 
     // removes data that we want to remain hidden from responses back to the client for security
     delete userObject.password
-    delete userObject.tokens
-    delete userObject.avatar
+    // delete userObject.tokens
+    // delete userObject.avatar
 
     return userObject
 }
