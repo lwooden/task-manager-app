@@ -1,13 +1,63 @@
 const express = require('express') // Require Express Package
 const User = require('../models/user') // Bring over the model for this resource
 const auth = require('../middleware/auth')
-
+const multer = require('multer')
 
 const router = new express.Router() // Create the new Router instance
 
+const avatar = multer({ // options object to provide filtering and validation to what the serve receives
+    // dest: 'avatars', // remove dest so multer can pass it's data to the route handler
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, callback) {
+
+        // use originalname API to check the file name and its extension
+        // if it does not end with pdf, throw error
+
+        // if (!file.originalname.endsWith('.pdf')) { // satisfies one condition
+        //     return callback(new Error('Please upload a PDF!'))
+        // }
+
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) { // wraps multiple conditions in one regex expression
+            return callback(new Error('Please upload an image file for your avatar!'))
+        }
+        // if it does, process the upload
+        callback(undefined, true)
+
+        // callback(new Error('File must be a PDF'))
+        // callback(undefined, true)
+        // callback(undefined, false)
+    }
+})
 
 
-// 1. Create User - Async/Await Style
+// Upload Avatar - Async/Await Style
+
+router.post('/users/me/avatar', auth, avatar.single('avatar'), async (req, res) => {
+    req.user.avatar = req.file.buffer
+    await req.user.save()
+    res.send('User profile updated')
+}, (error, req, res, next) => { // this second function attached to the route handler is defined to handle any uncaught errors
+    res.send({ error: error.message }) // the error object returned is parsed as JSON
+})
+
+
+// Delete Avatar - Async/Await Style
+
+router.delete('/users/me/avatar', auth, async (req, res) => {
+    try {
+        req.user.avatar = undefined // set avatar array to be empty so the avatar will be removed
+        await req.user.save() // save the user profile with the now deleted avatar
+        res.send() // send back a 200 status code
+    } catch (e) {
+        res.status(500).send()
+    }
+
+
+})
+
+// Create User - Async/Await Style
 
 router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
     
@@ -29,7 +79,7 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
     }
 })
 
-// 2. Get All Users - Async/Await Style
+// Get All Users - Async/Await Style
 
 router.get('/users', auth, async (req,res) => { // added "auth" as the 2nd argument so our middleware will run "before" the route suite is called
 
@@ -77,7 +127,7 @@ router.post('/users/logoutall', auth, async (req, res) => {
 })
 
 
-// 3. Get User By ID - Async/Await Style
+// Get User By ID - Async/Await Style
 
 router.get('/users/:id', async (req,res) => {
 
@@ -96,7 +146,7 @@ router.get('/users/:id', async (req,res) => {
     }
 })
 
-// 4. Update User By ID - Async/Await Style
+// Update User By ID - Async/Await Style
 
 router.patch('/users/:id', async (req,res) => {
 
@@ -131,7 +181,7 @@ router.patch('/users/:id', async (req,res) => {
     }
 })
 
-// 5. Delete User By ID - Async/Await Style
+// Delete User By ID - Async/Await Style
 
 router.delete('/users/me', auth, async (req,res) => {
 
@@ -144,7 +194,7 @@ router.delete('/users/me', auth, async (req,res) => {
     }
 })
 
-// 6. User Login - Async/Await Style
+// User Login - Async/Await Style
 
 router.post('/users/login', async (req, res) => {
     try {
