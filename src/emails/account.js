@@ -1,6 +1,6 @@
 const sgMail = require('@sendgrid/mail')
-const sendgridAPIKey = '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'
-sgMail.setApiKey(sendgridAPIKey)
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 // The goal for this file is to:
 // 1. Define functions that can be executed when the user does something (sign up, deletes account, etc)
