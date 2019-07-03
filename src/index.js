@@ -8,9 +8,29 @@ require('./db/mongoose') // ensures that the file (mongodb.js) runs and connects
 const app = express()
 const port = process.env.PORT || 3000
 
-const Task = require('./models/task')
-const User = require('./models/user')
+app.use(express.json()) // ensures express parses all json that is passed to the application
+app.use(userRouter) // enable user routes
+app.use(taskRouter) // enable task routes
 
+app.listen(port, () => {
+    console.log('Server is listening on port ' + port)
+})
+
+
+// <------  File Upload(Multer) Example ------> 
+const multer = require('multer')
+const upload = multer({
+    dest: 'images'
+})
+
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+})
+
+
+// <------  Populate Example ------> 
+// const Task = require('./models/task')
+// const User = require('./models/user')
 
 // const main = async () => {
 
@@ -26,6 +46,8 @@ const User = require('./models/user')
 // }
 
 // main()
+// <------  Populate Example ------> 
+
 
 // Without Middleware:  new request -> execute route handler
 //
@@ -49,11 +71,9 @@ const User = require('./models/user')
 // })
 // <------  Express Middleware Examples ------> 
 
-app.use(express.json()) // ensures express parses all json that is passed to the application
-app.use(userRouter) // enable user routes
-app.use(taskRouter) // enable task routes
 
-// Testing Jsonwebtoken
+
+// <------  JsonWebToken Example ------> 
 // const myFunction2 = async () => {
 
 //     var token = jwt.sign("I love the Lord", "1234" )
@@ -64,8 +84,11 @@ app.use(taskRouter) // enable task routes
 // }
 
 // myFunction2()
+// <------  JsonWebToken Example ------> 
 
-// Testing Bcrypt
+
+
+// <------  Bcrypt Example ------> 
 // const myPassword = "Password1"
 // const anotherPassword = "Password2"
 // const saltRounds = 10
@@ -85,10 +108,8 @@ app.use(taskRouter) // enable task routes
 // }
 
 // myFunction()
+// <------  Bcrypt Example ------> 
 
 
 
 
-app.listen(port, () => {
-    console.log('Server is listening on port ' + port)
-})
