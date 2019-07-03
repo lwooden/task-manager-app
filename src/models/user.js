@@ -70,6 +70,18 @@ userSchema.virtual('tasks', {
 
 })
 
+userSchema.methods.toJSON = function () {
+    const user = this
+    const userObject = user.toObject()
+
+    // removes data that we want to remain hidden from responses back to the client for security
+    delete userObject.password
+    delete userObject.tokens
+    delete userObject.avatar
+
+    return userObject
+}
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jwt.sign({ _id: user._id.toString() }, "1234")
