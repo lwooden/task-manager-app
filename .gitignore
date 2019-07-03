@@ -1,0 +1,7 @@
+node_modules/
+playground/
+.vscode/
+taskManager.code-workspace
+avatars
+images
+config
