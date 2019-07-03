@@ -3,6 +3,7 @@ const User = require('../models/user') // Bring over the model for this resource
 const auth = require('../middleware/auth')
 const multer = require('multer')
 const sharp = require('sharp')
+const { sendWelcomeEmail, sendCancellationEmail } = require('../emails/account') // object destructuring
 
 const router = new express.Router() // Create the new Router instance
 
@@ -87,6 +88,7 @@ router.post('/users', async (req,res) => { // Step 1: Mark function as "async"
     try { // Step  3: Wrap async task in a try/catch for a more natural syntactical feel
 
         const result = await user.save() // Step 2: Create a variable for the async task we want to perform
+        sendWelcomeEmail(user.email, user.name)
         const token = await user.generateAuthToken()
         // if there is a result then that means we were successful
         // send the result back to the user
@@ -208,7 +210,7 @@ router.delete('/users/me', auth, async (req,res) => {
 
     try {
         await req.user.remove()
-
+        sendCancellationEmail(req.user.email, req.user.name)
         res.send(req.user)
     } catch (e) {
         res.status(500).send()
