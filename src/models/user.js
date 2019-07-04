@@ -117,8 +117,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user
 }
 
-// define the actions that will take place before(pre) saving to the database
-userSchema.pre('save', async function(next) {
+// define the actions that will take place before(pre) saving a user to the database
+userSchema.pre('save', async function (next) {
 
     const user = this 
 
@@ -132,6 +132,7 @@ userSchema.pre('save', async function(next) {
 
 // define the actions that will take place before(pre) removing a user
 userSchema.pre('remove', async function(next) {
+
     const user = this
     await Task.deleteMany({ owner: user._id }) // delete every task where the owner equals the users ID
     next() // move on to execute the route handler suite
