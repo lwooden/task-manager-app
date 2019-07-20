@@ -43,16 +43,16 @@ test('Should Convert Celsius to Farenheit', () => {
 //     }, 2000)
 // })
 
-test('Should Add 2 Numbers (Promise Chaining)', (done) => {
-    add(2,3).then((sum) => {
-        expect(sum).toBe(5)
-        done()
-    })
-})
+// test('Should Add 2 Numbers (Promise Chaining)', (done) => {
+//     add(2,3).then((sum) => {
+//         expect(sum).toBe(5)
+//         done()
+//     })
+// })
 
 test('Should Add 2 Numbers (Async/Await)', async () => {
     const sum = await add(4,6)
-    expect(sum).toBe(11)
+    expect(sum).toBe(10)
 })
 
 /* Jest comes with an asserstion library */
