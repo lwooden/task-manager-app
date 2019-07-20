@@ -1,16 +1,18 @@
-const express = require('express')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const userRouter = require('./routes/userRoutes') // import userRoutes file
-const taskRouter = require('./routes/taskRoutes') // import taskRoutes file
-require('./db/mongoose') // ensures that the file (mongodb.js) runs and connects to the database
+const app = require("./app")
 
-const app = express()
+// const express = require('express')
+// const bcrypt = require('bcrypt')
+// const jwt = require('jsonwebtoken')
+// const userRouter = require('./routes/userRoutes') // import userRoutes file
+// const taskRouter = require('./routes/taskRoutes') // import taskRoutes file
+// require('./db/mongoose') // ensures that the file (mongodb.js) runs and connects to the database
+
+// const app = express()
 const port = process.env.PORT // || 3000 is no longer needed because of dev.env file
 
-app.use(express.json()) // ensures express parses all json that is passed to the application
-app.use(userRouter) // enable user routes
-app.use(taskRouter) // enable task routes
+// app.use(express.json()) // ensures express parses all json that is passed to the application
+// app.use(userRouter) // enable user routes
+// app.use(taskRouter) // enable task routes
 
 app.listen(port, () => {
     console.log('Server is listening on port ' + port)
@@ -18,14 +20,14 @@ app.listen(port, () => {
 
 
 // <------  File Upload(Multer) Example ------> 
-const multer = require('multer')
-const upload = multer({
-    dest: 'images'
-})
+// const multer = require('multer')
+// const upload = multer({
+//     dest: 'images'
+// })
 
-app.post('/upload', upload.single('upload'), (req, res) => {
-    res.send()
-})
+// app.post('/upload', upload.single('upload'), (req, res) => {
+//     res.send()
+// })
 
 
 // <------  Populate Example ------> 
