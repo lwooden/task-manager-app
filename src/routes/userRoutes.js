@@ -171,9 +171,9 @@ router.get('/users/:id', async (req,res) => {
 
 // Update User By ID - Async/Await Style
 
-router.patch('/users/:id', async (req,res) => {
+router.patch('/users/me', auth, async (req,res) => {
 
-    const _id = req.params.id // access and save the value passed in
+    const _id = req.user.id // access and save the value passed in
     const updates = Object.keys(req.body) // stores all of the keys passed in req.body in a new array object
     const allowedUpdates = ["name", "email", "age", "password"] // array that defines what keys we will allowed to be updated
     
