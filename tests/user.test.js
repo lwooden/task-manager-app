@@ -6,16 +6,16 @@ const jwt = require('jsonwebtoken')
 const { testUserId, testUser, setupDatabase } = require('./fixtures/db')
 
 
-const testUserId = new mongoose.Types.ObjectId() // create ObjectID for test user ahead of time
-const testUser = {
-    _id: testUserId, // reference it 
-    name: 'John Doe',
-    email: 'lwooden20@gmail.com',
-    password: 'sheldonave',
-    tokens: [{
-        token: jwt.sign({ _id: testUserId }, process.env.JWT_SECRET) // create token using precreated ObjectID 
-    }]
-}
+// const testUserId = new mongoose.Types.ObjectId() // create ObjectID for test user ahead of time
+// const testUser = {
+//     _id: testUserId, // reference it 
+//     name: 'John Doe',
+//     email: 'lwooden20@gmail.com',
+//     password: 'sheldonave',
+//     tokens: [{
+//         token: jwt.sign({ _id: testUserId }, process.env.JWT_SECRET) // create token using precreated ObjectID 
+//     }]
+// }
 
 const invalidUser = {
     name: "Bad User",
@@ -43,8 +43,8 @@ test("Should signup a new user", async () => {
 
     // (Assert) Check to see if the database change correctly
     const user = await User.findById(response.body._id)
-    console.log(user)
-    console.log(user.name)
+    // console.log(user)
+    // console.log(user.name)
     expect(user).not.toBeNull() // expect the user to be in the database (not a null reference)
 
     // (Assert) Check the details of the response
